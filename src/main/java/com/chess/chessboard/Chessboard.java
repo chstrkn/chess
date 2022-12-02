@@ -76,4 +76,12 @@ public class Chessboard {
         chessboard[getRank(destination)][getFile(destination)].setRank(getRank(destination));
         chessboard[getRank(destination)][getFile(destination)].setFile(getFile(destination));
     }
+
+    public boolean isCheckmate(String color) {
+        return false;
+    }
+
+    public boolean isStalemate(String color) {
+        return false;
+    }
 }
