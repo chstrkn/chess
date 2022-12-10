@@ -77,6 +77,27 @@ public class Chessboard {
         chessboard[getRank(destination)][getFile(destination)].setFile(getFile(destination));
     }
 
+    public void promotePawn(String square, String piece) {
+        int rank = getRank(square);
+        int file = getFile(square);
+        switch (piece) {
+            case "Q":
+                chessboard[rank][file] = new Queen(chessboard[rank][file].getColor(), rank, file);
+                break;
+            case "R":
+                chessboard[rank][file] = new Rook(chessboard[rank][file].getColor(), rank, file);
+                break;
+            case "B":
+                chessboard[rank][file] = new Bishop(chessboard[rank][file].getColor(), rank, file);
+                break;
+            case "K":
+                chessboard[rank][file] = new Knight(chessboard[rank][file].getColor(), rank, file);
+                break;
+            default:
+                break;
+        }
+    }
+
     public boolean isCheckmate(String color) {
         return false;
     }

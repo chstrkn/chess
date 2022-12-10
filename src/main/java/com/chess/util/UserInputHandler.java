@@ -19,6 +19,7 @@ public class UserInputHandler {
     private static Scanner scanner = new Scanner(System.in);
     private static String origin;
     private static String destination;
+    private static String promotion;
 
     public static void waitForEnter() {
         scanner.nextLine();
@@ -77,5 +78,22 @@ public class UserInputHandler {
         }
         return piece.canMove(chessboard.getChessboard(), chessboard.getRank(destination),
                 chessboard.getFile(destination));
+    }
+
+    public static String getPromotion() {
+        do {
+            System.out.print("Enter promotion (e.g. Q): ");
+            promotion = scanner.nextLine().toUpperCase();
+            if (!isValidPromotion(promotion)) {
+                System.out.println("Invalid promotion! Try again.");
+                System.out.println();
+            }
+        } while (!isValidPromotion(promotion));
+        return promotion;
+    }
+
+    public static boolean isValidPromotion(String promotion) {
+        return promotion.equals("Q") || promotion.equals("R") || promotion.equals("B")
+                || promotion.equals("N");
     }
 }
