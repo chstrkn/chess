@@ -10,6 +10,7 @@
 package com.chess;
 
 import com.chess.chessboard.Chessboard;
+import com.chess.pieces.King;
 import com.chess.pieces.Pawn;
 import com.chess.pieces.Piece;
 import com.chess.players.Players;
@@ -63,6 +64,23 @@ public class Chess {
                 }
             } while (!piece.canMove(chessboard.getChessboard(), chessboard.getRank(destination),
                     chessboard.getFile(destination)));
+            if (!(piece instanceof King) && chessboard.isStillCheck(Players.getCurrentPlayer()) ||
+                    chessboard.isStillCheck(Players.getNextPlayer())) {
+                // Simulate the move
+                chessboard.movePiece(origin, destination);
+                if (chessboard.isStillCheck(Players.getCurrentPlayer())
+                        || chessboard.isStillCheck(Players.getNextPlayer())) {
+                    // Check if the move is a check, if still in check, skips code below and go to
+                    // next iteration
+                    System.out
+                            .println("You must block the check or move your King to an unchecked position! Try again.");
+                    UserInputHandler.waitForEnter();
+                    // undo move
+                    chessboard.movePiece(destination, origin);
+                    continue;
+                }
+                chessboard.movePiece(destination, origin); // undo move
+            }
             // Capture the piece at the destination if it is not empty
             if (!chessboard.isEmptySquare(destination)) {
                 for (int i = 0; i < capturedPieces.length; i++) {
@@ -79,6 +97,20 @@ public class Chess {
                     || chessboard.getRank(destination) == 7)) {
                 promotion = UserInputHandler.getPromotion();
                 chessboard.promotePawn(destination, promotion);
+            }
+            if (piece instanceof King) {
+                // Check if the move is a check
+                if (chessboard.isCheckAfterMove(piece, destination)) {
+                    System.out.println("You cannot move your king into check! Try again.");
+                    UserInputHandler.waitForEnter();
+                    // Undo move
+                    chessboard.movePiece(destination, origin);
+                }
+            }
+            // Check if the move is a check
+            if (chessboard.isCheck(Players.getCurrentPlayer()) || chessboard.isCheck(Players.getNextPlayer())) {
+                System.out.println("Check!");
+                UserInputHandler.waitForEnter();
             }
             // Switch the current player
             Players.switchCurrentPlayer();

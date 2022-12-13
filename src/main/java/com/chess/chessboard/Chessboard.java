@@ -66,6 +66,28 @@ public class Chessboard {
 
     }
 
+    public int getKingRank(String color) {
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                if (chessboard[i][j] instanceof King && chessboard[i][j].getColor().equals(color)) {
+                    return i;
+                }
+            }
+        }
+        return -1;
+    }
+
+    public int getKingFile(String color) {
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                if (chessboard[i][j] instanceof King && chessboard[i][j].getColor().equals(color)) {
+                    return j;
+                }
+            }
+        }
+        return -1;
+    }
+
     public boolean isEmptySquare(String square) {
         return chessboard[getRank(square)][getFile(square)] == null;
     }
@@ -96,6 +118,58 @@ public class Chessboard {
             default:
                 break;
         }
+    }
+
+    public boolean isCheck(String color) {
+        int kingRank = getKingRank(color);
+        int kingFile = getKingFile(color);
+
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                Piece piece = chessboard[i][j];
+                if (piece != null && !piece.getColor().equals(color)) {
+                    if (piece.canMove(getChessboard(), kingRank, kingFile)) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    public boolean isStillCheck(String color) {
+        // Get the rank and file of the king
+        int kingRank = getKingRank(color);
+        int kingFile = getKingFile(color);
+
+        // Check if any of the opponent's pieces can capture the king
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                Piece piece = chessboard[i][j];
+                if (piece != null && !piece.getColor().equals(color)
+                        && piece.canMove(getChessboard(), kingRank, kingFile)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public boolean isCheckAfterMove(Piece piece, String destination) {
+        int rank = getRank(destination);
+        int file = getFile(destination);
+        String enemyColor = piece.getColor().equals("White") ? "Black" : "White";
+
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                Piece enemyPiece = chessboard[i][j];
+                if (enemyPiece != null && enemyPiece.getColor().equals(enemyColor)
+                        && enemyPiece.canMove(chessboard, rank, file)) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     public boolean isCheckmate(String color) {
