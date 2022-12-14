@@ -75,9 +75,12 @@ public class UserInputHandler {
                 chessboard.getFile(destination))) {
             System.out.println("Invalid move! Try again.");
             System.out.println();
+        } else if (chessboard.isCheckAfterMove(piece, destination)) {
+            System.out.println("You cannot move your king into check! Try again.");
+            System.out.println();
         }
         return piece.canMove(chessboard.getChessboard(), chessboard.getRank(destination),
-                chessboard.getFile(destination));
+                chessboard.getFile(destination)) && !chessboard.isCheckAfterMove(piece, destination);
     }
 
     public static String getPromotion() {
