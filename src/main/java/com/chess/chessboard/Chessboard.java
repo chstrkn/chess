@@ -220,6 +220,49 @@ public class Chessboard {
     }
 
     public boolean isStalemate(String color) {
-        return false;
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                if (color.equals("White")) {
+                    if (chessboard[i][j] != null && chessboard[i][j].getColor().equals("White")) {
+                        for (int k = 0; k < 8; k++) {
+                            for (int l = 0; l < 8; l++) {
+                                if (chessboard[i][j].canMove(chessboard, k, l)) {
+                                    Piece temp = chessboard[k][l];
+                                    chessboard[k][l] = chessboard[i][j];
+                                    chessboard[i][j] = null;
+                                    if (!isCheck("White")) {
+                                        chessboard[i][j] = chessboard[k][l];
+                                        chessboard[k][l] = temp;
+                                        return false;
+                                    }
+                                    chessboard[i][j] = chessboard[k][l];
+                                    chessboard[k][l] = temp;
+                                }
+                            }
+                        }
+                    }
+                } else {
+                    if (chessboard[i][j] != null && chessboard[i][j].getColor().equals("Black")) {
+                        for (int k = 0; k < 8; k++) {
+                            for (int l = 0; l < 8; l++) {
+                                if (chessboard[i][j].canMove(chessboard, k, l)) {
+                                    Piece temp = chessboard[k][l];
+                                    chessboard[k][l] = chessboard[i][j];
+                                    chessboard[i][j] = null;
+                                    if (!isCheck("Black")) {
+                                        chessboard[i][j] = chessboard[k][l];
+                                        chessboard[k][l] = temp;
+                                        return false;
+                                    }
+                                    chessboard[i][j] = chessboard[k][l];
+                                    chessboard[k][l] = temp;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return true;
     }
 }
