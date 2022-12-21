@@ -12,8 +12,19 @@ package com.chess.pieces;
 import com.chess.util.ChessPrinter;
 
 public class Rook extends Piece {
+    private boolean hasMoved;
+
     public Rook(String color, int rank, int file) {
         super("Rook", color, rank, file);
+        this.hasMoved = false;
+    }
+
+    public boolean hasMoved() {
+        return hasMoved;
+    }
+
+    public void didMove() {
+        this.hasMoved = true;
     }
 
     @Override

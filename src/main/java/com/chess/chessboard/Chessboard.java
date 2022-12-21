@@ -97,6 +97,24 @@ public class Chessboard {
         chessboard[getRank(origin)][getFile(origin)] = null;
         chessboard[getRank(destination)][getFile(destination)].setRank(getRank(destination));
         chessboard[getRank(destination)][getFile(destination)].setFile(getFile(destination));
+        // Set the hasMoved to true if the piece is a king or rook
+        if (chessboard[getRank(destination)][getFile(destination)] instanceof King) {
+            ((King) chessboard[getRank(destination)][getFile(destination)]).didMove();
+            // Check if the move is a castle
+            if (getFile(destination) == 6) {
+                chessboard[getRank(destination)][getFile(destination)
+                        - 1] = chessboard[getRank(destination)][getFile(destination) + 1];
+                chessboard[getRank(destination)][getFile(destination) + 1] = null;
+                chessboard[getRank(destination)][getFile(destination) - 1].setFile(getFile(destination) - 1);
+            } else if (getFile(destination) == 2) {
+                chessboard[getRank(destination)][getFile(destination)
+                        + 1] = chessboard[getRank(destination)][getFile(destination) - 2];
+                chessboard[getRank(destination)][getFile(destination) - 2] = null;
+                chessboard[getRank(destination)][getFile(destination) + 1].setFile(getFile(destination) + 1);
+            }
+        } else if (chessboard[getRank(destination)][getFile(destination)] instanceof Rook) {
+            ((Rook) chessboard[getRank(destination)][getFile(destination)]).didMove();
+        }
     }
 
     public void promotePawn(String square, String piece) {
