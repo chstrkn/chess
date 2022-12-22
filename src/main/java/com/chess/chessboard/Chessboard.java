@@ -66,6 +66,14 @@ public class Chessboard {
 
     }
 
+    public Piece getPiece(int rank, int file) {
+        return chessboard[rank][file];
+    }
+
+    public void removePiece(int rank, int file) {
+        chessboard[rank][file] = null;
+    }
+
     public int getKingRank(String color) {
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
@@ -93,12 +101,19 @@ public class Chessboard {
     }
 
     public void movePiece(String origin, String destination) {
+        resetDoubleMove();
         chessboard[getRank(destination)][getFile(destination)] = chessboard[getRank(origin)][getFile(origin)];
         chessboard[getRank(origin)][getFile(origin)] = null;
         chessboard[getRank(destination)][getFile(destination)].setRank(getRank(destination));
         chessboard[getRank(destination)][getFile(destination)].setFile(getFile(destination));
-        // Set the hasMoved to true if the piece is a king or rook
-        if (chessboard[getRank(destination)][getFile(destination)] instanceof King) {
+        // Set the hasMoved to true if the piece is a pawn, king or rook
+        if (chessboard[getRank(destination)][getFile(destination)] instanceof Pawn) {
+            ((Pawn) chessboard[getRank(destination)][getFile(destination)]).didMove();
+            // Check if the move is a double move
+            if (Math.abs(getRank(destination) - getRank(origin)) == 2) {
+                ((Pawn) chessboard[getRank(destination)][getFile(destination)]).setHasDoubleMoved(true);
+            }
+        } else if (chessboard[getRank(destination)][getFile(destination)] instanceof King) {
             ((King) chessboard[getRank(destination)][getFile(destination)]).didMove();
             // Check if the move is a castle
             if (getFile(destination) == 6) {
@@ -114,6 +129,17 @@ public class Chessboard {
             }
         } else if (chessboard[getRank(destination)][getFile(destination)] instanceof Rook) {
             ((Rook) chessboard[getRank(destination)][getFile(destination)]).didMove();
+        }
+    }
+
+    // Method set all the pawn to not have double moved
+    public void resetDoubleMove() {
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                if (chessboard[i][j] instanceof Pawn) {
+                    ((Pawn) chessboard[i][j]).setHasDoubleMoved(false);
+                }
+            }
         }
     }
 

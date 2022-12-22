@@ -90,6 +90,19 @@ public class Chess {
                     }
                 }
             }
+            // Remove the piece if en passant
+            if (piece instanceof Pawn && chessboard.getFile(origin) != chessboard.getFile(destination)
+                    && chessboard.isEmptySquare(destination)) {
+                for (int i = 0; i < capturedPieces.length; i++) {
+                    if (capturedPieces[i] == null) {
+                        capturedPieces[i] = chessboard.getPiece(chessboard.getRank(origin),
+                                chessboard.getFile(destination));
+                        chessboard.removePiece(chessboard.getRank(origin),
+                                chessboard.getFile(destination));
+                        break;
+                    }
+                }
+            }
             // Move the piece to the destination
             chessboard.movePiece(origin, destination);
             // Promote the pawn if it reaches the last rank

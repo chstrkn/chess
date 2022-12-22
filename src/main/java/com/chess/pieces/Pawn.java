@@ -12,8 +12,29 @@ package com.chess.pieces;
 import com.chess.util.ChessPrinter;
 
 public class Pawn extends Piece {
+    private boolean hasMoved;
+    private boolean hasDoubleMoved;
+
     public Pawn(String color, int rank, int file) {
         super("Pawn", color, rank, file);
+        this.hasMoved = false;
+        this.hasDoubleMoved = false;
+    }
+
+    public boolean hasMoved() {
+        return hasMoved;
+    }
+
+    public void didMove() {
+        this.hasMoved = true;
+    }
+
+    public boolean hasDoubleMoved() {
+        return hasDoubleMoved;
+    }
+
+    public void setHasDoubleMoved(boolean hasDoubleMoved) {
+        this.hasDoubleMoved = hasDoubleMoved;
     }
 
     @Override
@@ -45,6 +66,17 @@ public class Pawn extends Piece {
             if (rank == this.getRank() - 1 && (file == this.getFile() - 1 || file == this.getFile() + 1)) {
                 if (chessboard[rank][file] != null) {
                     return true;
+                } else {
+                    // Check if the pawn can capture en passant
+                    if (chessboard[rank + 1][file] != null) {
+                        if (chessboard[rank + 1][file].getType().equals("Pawn")) {
+                            if (chessboard[rank + 1][file].getColor().equals("Black")) {
+                                if (((Pawn) chessboard[rank + 1][file]).hasDoubleMoved()) {
+                                    return true;
+                                }
+                            }
+                        }
+                    }
                 }
             }
         } else {
@@ -66,6 +98,17 @@ public class Pawn extends Piece {
             if (rank == this.getRank() + 1 && (file == this.getFile() - 1 || file == this.getFile() + 1)) {
                 if (chessboard[rank][file] != null) {
                     return true;
+                } else {
+                    // Check if the pawn can capture en passant
+                    if (chessboard[rank - 1][file] != null) {
+                        if (chessboard[rank - 1][file].getType().equals("Pawn")) {
+                            if (chessboard[rank - 1][file].getColor().equals("White")) {
+                                if (((Pawn) chessboard[rank - 1][file]).hasDoubleMoved()) {
+                                    return true;
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }
